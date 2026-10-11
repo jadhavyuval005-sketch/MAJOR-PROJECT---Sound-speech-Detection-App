@@ -1,0 +1,42 @@
+name: CI / deploy
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12", cache: pip, cache-dependency-path: backend/requirements.txt }
+      - run: pip install -r backend/requirements.txt
+      - run: python -m pytest -q
+        working-directory: backend
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: npm, cache-dependency-path: frontend/package-lock.json }
+      - run: npm ci && npm run build
+        working-directory: frontend
+      - uses: actions/upload-artifact@v4
+        with: { name: frontend-dist, path: frontend/dist }
+
+  deploy:
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with: { name: frontend-dist, path: frontend/dist }
+      - name: Copy to EC2 and restart
+        env:
+          SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
+          HOST: ${{ secrets.EC2_HOST }}
+        run: |
+          install -m 600 /dev/null key.pem && echo "$SSH_KEY" > key.pem
+          SSH="ssh -i key.pem -o StrictHostKeyChecking=accept-new"
+          rsync -az --delete -e "$SSH" backend/ ubuntu@$HOST:/opt/ssd-screener/backend/ --exclude .env --exclude audio_store --exclude '*.db'
+          rsync -az --delete -e "$SSH" frontend/dist/ ubuntu@$HOST:/opt/ssd-screener/frontend/dist/
+          $SSH ubuntu@$HOST "/opt/ssd-screener/venv/bin/pip install -q -r /opt/ssd-screener/backend/requirements.txt && sudo systemctl restart ssd"
