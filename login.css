@@ -1,0 +1,62 @@
+:root {
+  --bg: #f6f4ee; --ink: #1f2a37; --muted: #657083; --line: #e4e0d4;
+  --brand: #0f766e; --brand-ink: #ffffff; --bad: #991b1b;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #14181d; --ink: #e8ecf1; --muted: #9aa5b4; --line: #2c3541; --brand: #2dd4bf; --brand-ink: #062a27; --bad: #fca5a5; }
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.5 Nunito, system-ui, sans-serif; }
+h1, h2 { line-height: 1.2; margin: 0 0 .5rem; }
+p { margin: .25rem 0 .75rem; }
+.muted { color: var(--muted); }
+.error { color: var(--bad); font-weight: 600; }
+
+.logo { display: inline-grid; place-items: center; width: 2rem; height: 2rem; border-radius: 8px; background: var(--brand); color: var(--brand-ink); font: 600 1rem "Noto Sans Devanagari", sans-serif; }
+
+.auth { display: grid; grid-template-columns: 1.15fr 1fr; min-height: 100vh; }
+
+/* Left: hero */
+.hero { position: relative; overflow: hidden; color: #f2fffc; padding: 3rem clamp(1.5rem, 5vw, 4.5rem);
+  background: radial-gradient(900px 500px at 15% 0%, #14b8a6 0%, transparent 60%), radial-gradient(700px 500px at 100% 100%, #f59e0b55 0%, transparent 60%), linear-gradient(160deg, #0b4f4a, #06302d); }
+.hero-inner { position: relative; z-index: 1; max-width: 560px; }
+.brandmark { display: flex; align-items: center; gap: .6rem; font-size: 1.25rem; margin-bottom: 2.5rem; }
+.brandmark .logo { background: #fff; color: #0b4f4a; }
+.hero h1 { font-size: clamp(1.9rem, 3.6vw, 2.9rem); font-weight: 800; letter-spacing: -.02em; line-height: 1.12; margin-bottom: 1rem; }
+.hero h1 em { font-style: normal; color: #fcd34d; }
+.lede { font-size: 1.05rem; color: #c9ece7; max-width: 46ch; }
+.floater { position: absolute; font: 600 clamp(2rem, 5vw, 3.6rem) "Noto Sans Devanagari", Nunito, sans-serif; color: #ffffff1c; animation: drift 7s ease-in-out infinite; user-select: none; }
+@keyframes drift { 50% { transform: translateY(-14px) rotate(4deg); } }
+.points { margin-top: 2rem; list-style: none; padding: 0; display: grid; gap: .6rem; color: #c9ece7; }
+.points li { padding-left: 1.6rem; position: relative; }
+.points li::before { content: "✦"; position: absolute; left: 0; color: #fcd34d; }
+.points b { color: #fff; }
+
+/* Right: form */
+.auth-side { display: grid; place-items: center; padding: 2rem 1.25rem; }
+.auth-form { display: flex; flex-direction: column; width: 100%; max-width: 380px; }
+.namaste { font-size: 1.1rem; color: var(--brand); font-weight: 700; margin: 0; }
+.auth-form h2 { font-size: 1.9rem; letter-spacing: -.01em; margin: .1rem 0 .25rem; }
+.sub { margin-bottom: 1.5rem; }
+label { display: block; font-size: .875rem; font-weight: 600; margin-bottom: .75rem; }
+input, select { display: block; width: 100%; margin-top: .25rem; padding: .6rem .7rem; font: inherit; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 8px; }
+input:focus, select:focus, button:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+.pw { position: relative; display: block; }
+.pw input { padding-right: 4.2rem; }
+.eye { position: absolute; right: .4rem; top: 50%; transform: translateY(-40%); background: none; border: 0; color: var(--brand); font: 700 .8rem Nunito, system-ui, sans-serif; cursor: pointer; padding: .4rem; }
+.btn { padding: .6rem 1rem; border-radius: 8px; border: 1px solid var(--line); font: 600 .95rem Nunito, system-ui, sans-serif; cursor: pointer; }
+.btn.primary { background: var(--brand); color: var(--brand-ink); border-color: var(--brand); }
+.btn.wide { width: 100%; padding: .8rem; font-size: 1rem; margin-top: .25rem; box-shadow: 0 6px 16px -6px var(--brand); }
+.btn:disabled { opacity: .6; cursor: default; }
+.link { background: none; border: 0; color: var(--brand); font: 700 .9rem Nunito, system-ui, sans-serif; cursor: pointer; padding: .25rem; }
+.switch { text-align: center; margin-top: 1rem; color: var(--muted); }
+.fine { text-align: center; font-size: .78rem; color: var(--muted); margin-top: 1.5rem; }
+
+@media (max-width: 860px) {
+  .auth { grid-template-columns: 1fr; min-height: 0; }
+  .hero { padding: 1.5rem 1.25rem 2rem; } .brandmark { margin-bottom: 1.25rem; }
+  .points, .floater:nth-child(n+4) { display: none; }
+  .auth-side { padding: 2rem 1.25rem 3rem; }
+}
+@media (prefers-reduced-motion: reduce) { .floater { animation: none; } }
