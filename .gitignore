@@ -1,0 +1,10 @@
+node_modules/
+frontend/dist/
+__pycache__/
+*.pyc
+.env
+*.db
+audio_store/
+test_audio_store/
+.pytest_cache/
+venv/
