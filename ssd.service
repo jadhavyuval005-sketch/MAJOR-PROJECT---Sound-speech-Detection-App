@@ -1,0 +1,14 @@
+# /etc/systemd/system/ssd.service on the EC2 instance
+[Unit]
+Description=SSD Screener (gunicorn)
+After=network.target
+
+[Service]
+User=ubuntu
+WorkingDirectory=/opt/ssd-screener/backend
+EnvironmentFile=/opt/ssd-screener/backend/.env
+ExecStart=/opt/ssd-screener/venv/bin/gunicorn -w 2 -b 127.0.0.1:8000 --timeout 120 wsgi:app
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
